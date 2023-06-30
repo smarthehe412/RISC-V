@@ -20,6 +20,7 @@ unsigned int getPart(unsigned int v,int l,int r)
 }
 int sext(unsigned int num,int len)
 {
+    if(len==32) return num;
     if(num&(1u<<(len-1))) return num|((-1u)>>len<<len);
     else return num;
 }

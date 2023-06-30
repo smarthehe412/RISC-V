@@ -2,7 +2,7 @@
 
 class LoadStoreBuffer
 {
-    const static int N=100;
+    const static int N=500;
     enum state {wait,calc,done};
 public:
     struct Buffer
@@ -78,7 +78,6 @@ public:
         rem2=rem-1;
         if(!rem2)
         {
-            dir%=MEM_MAX;
             if(op>0) for(int i=0;i<op;i++) mem[dir+i]=val>>(i*8)&255;
             else val2=getValxx(mem,dir,dir-op-1);
             LSB.prepare(pos,val2);
@@ -90,7 +89,6 @@ public:
         rem2--;
         if(!rem2)
         {
-            dir%=MEM_MAX;
             if(op>0) for(int i=0;i<op;i++) mem[dir+i]=val>>(i*8)&255;
             else val2=getValxx(mem,dir,dir-op-1);
             LSB.prepare(pos,val2);

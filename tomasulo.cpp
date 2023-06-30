@@ -67,17 +67,8 @@ public:
         } que[N];
         int h,t;
         Buffer(){h=t=0;}
-        bool full()
-        {
-            int nx=(t+1)%N;
-            if(que[nx].busy) return true;
-            return false;
-        }
-        void clear()
-        {
-            for(int i=0;i<N;i++) que[i]=node();
-            h=t=0;
-        }
+        bool full(){return h==t&&que[h].busy;}
+        void clear(){for(int i=0;i<N;i++) que[i]=node();h=t=0;}
         bool isExecute(){return que[h].st==execute;}
         bool isReady(){return que[h].st==ready;}
         bool isCommit(){return que[h].st==commit;}
@@ -164,8 +155,8 @@ void execute()
 void commit()
 {
     if(RoB.now.isExecute()||RoB.now.isWait()) return;
-    int pc=RoB.now.toppc(),dest=RoB.now.topd(),val=RoB.now.topv();
-    //printf("%d\n",pc);
+    int pc=RoB.now.toppc(),dest=RoB.now.topd(),val=RoB.now.topv();\
+    //if(pc==4260) system("pause");
     //printf("pc=%d val=%d ",pc,val),decode(pc).print();
     if(getValxx(mem,pc,pc+3)==0x0ff00513) {end=true;return;}
     int typ=getType2(pc);

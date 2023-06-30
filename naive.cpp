@@ -19,6 +19,7 @@ unsigned int getPart(unsigned int v,int l,int r)
 }
 int sext(unsigned int num,int len)
 {
+    if(len==32) return num;
     if(num&(1u<<(len-1))) return num|((-1u)>>len<<len);
     else return num;
 }
@@ -168,17 +169,18 @@ void getAllCommands()
         }
     }
 }
-
 int reg[32],pc;
 int main()
 {
+    std::cerr<<(0xffff7<<12)<<std::endl;
     freopen("task.data","r",stdin);
-    freopen("naive.out","w",stdout);
+    freopen("RISC-V_Simulator-main/naive.out","w",stdout);
     getAllCommands();
     while(1)
     {
         printf("%d\n",pc);
         for(int i=0;i<32;i++) printf("%d ",reg[i]);printf("\n");
+        //for(int i=131000;i<=132000;i++) printf("%d ",mem[i]);printf("\n");
         if(getValxx(mem,pc,pc+3)==0x0ff00513)
         {
             printf("%u",(unsigned int)(reg[10])&255u);
