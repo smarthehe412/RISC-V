@@ -1,12 +1,12 @@
 #include "parser.cpp"
 class ReservationStationALU
 {
-    const static int N=100;
+    const static int N=64,cdbSIZE=2;
     enum state {wait,calc,done};
 public:
     struct ReservationStation
     {
-        int bid[5],bva[5];
+        int bid[cdbSIZE],bva[cdbSIZE];
         struct node
         {
             bool busy;
@@ -17,12 +17,12 @@ public:
         } rs[N];
         ReservationStation()
         {
-            for(int i=0;i<5;i++) bid[i]=-2,bva[i]=0;
+            for(int i=0;i<cdbSIZE;i++) bid[i]=-2,bva[i]=0;
         }
         void clear()
         {
             for(int i=0;i<N;i++) rs[i]=node();
-            for(int i=0;i<5;i++) bid[i]=-2,bva[i]=0;
+            for(int i=0;i<cdbSIZE;i++) bid[i]=-2,bva[i]=0;
         }
         void ins(int dest,int vj,int vk,int qj,int qk,int op,int id)
         {
@@ -31,8 +31,8 @@ public:
                 if(!rs[i].busy)
                 {
                     rs[i]=node(dest,vj,vk,qj,qk,op,id);
-                    for(int j=0;j<5;j++) if(rs[i].qj==bid[j]) rs[i].qj=-1,rs[i].vj=bva[j];
-                    for(int j=0;j<5;j++) if(rs[i].qk==bid[j]) rs[i].qk=-1,rs[i].vk=bva[j];
+                    for(int j=0;j<cdbSIZE;j++) if(rs[i].qj==bid[j]) rs[i].qj=-1,rs[i].vj=bva[j];
+                    for(int j=0;j<cdbSIZE;j++) if(rs[i].qk==bid[j]) rs[i].qk=-1,rs[i].vk=bva[j];
                     return;
                 }
             }
@@ -66,11 +66,11 @@ public:
     void nextClock()
     {
         now=next;
-        for(int i=0;i<5;i++) next.bid[i]=-2,next.bva[i]=0;
+        for(int i=0;i<cdbSIZE;i++) next.bid[i]=-2,next.bva[i]=0;
     }
     void broadcast(int id,int va)
     {
-        for(int i=0;i<5;i++)
+        for(int i=0;i<cdbSIZE;i++)
         {
             if(next.bid[i]!=-2) continue;
             next.bid[i]=id,next.bva[i]=va;

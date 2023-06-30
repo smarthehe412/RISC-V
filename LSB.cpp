@@ -2,7 +2,7 @@
 
 class LoadStoreBuffer
 {
-    const static int N=500;
+    const static int N=64;
     enum state {wait,calc,done};
 public:
     struct Buffer
