@@ -52,7 +52,7 @@ information decode(int pc)
 }
 class ReorderBuffer
 {
-    const static int N=500;
+    const static int N=100;
     enum state {execute,ready,commit};
 public:
     struct Buffer
@@ -68,19 +68,7 @@ public:
         int h,t;
         Buffer(){h=t=0;}
         bool full(){return h==t&&que[h].busy;}
-        void clear()
-        {
-            if(full()) for(int i=0;i<N;i++) que[i]=node();
-            else
-            {
-                for(int i=h;i!=t;i++)
-                {
-                    if(i==N) i=0;
-                    que[i]=node(); 
-                }
-            }
-            h=t=0;
-        }
+        void clear() {for(int i=0;i<N;i++) que[i]=node();h=t=0;}
         bool isExecute(){return que[h].st==execute;}
         bool isReady(){return que[h].st==ready;}
         bool isCommit(){return que[h].st==commit;}

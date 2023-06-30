@@ -20,7 +20,6 @@ unsigned int getPart(unsigned int v,int l,int r)
 }
 int sext(unsigned int num,int len)
 {
-    if(len==32) return num;
     if(num&(1u<<(len-1))) return num|((-1u)>>len<<len);
     else return num;
 }
@@ -129,7 +128,7 @@ int getImm(int l)
     if(typ=='I') return sext(getPart(in,31,20),12);
     if(typ=='S') return sext(getPart(in,31,25)<<5|getPart(in,11,7),12);
     if(typ=='B') return sext(getPart(in,31,31)<<12|getPart(in,30,25)<<5|getPart(in,11,8)<<1|getPart(in,7,7)<<11,13);
-    if(typ=='U') return sext(getPart(in,31,12)<<12,32);
+    if(typ=='U') return getPart(in,31,12)<<12;
     if(typ=='J') return sext(getPart(in,31,31)<<20|getPart(in,30,21)<<1|getPart(in,20,20)<<11|getPart(in,19,12)<<12,21);
     return 114514;
 }
