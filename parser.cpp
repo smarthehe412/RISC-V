@@ -5,7 +5,7 @@ const int MEM_MAX=1e6;
 static unsigned char mem[MEM_MAX];
 enum commands {LUI,AUIPC,JAL,JALR,BEQ,BNE,BLT,BGE,BLTU,BGEU,LB,LH,LW,LBU,LHU,SB,SH,SW,ADDI,SLTI,SLTIU,XORI,ORI,ANDI,SLLI,SRLI,SRAI,ADD,SUB,SLL,SLT,
 SLTU,XOR,SRL,SRA,OR,AND};
-enum operators {none=-1,eq,neq,le,geq,leu,gequ,add,xori,ori,andi,slli,srli,srai,sub,mul,dv};
+enum operators {none=-1,eq,neq,le,geq,leu,gequ,add,xori,ori,andi,slli,srli,srai,sub};
 const int ops[37]={none,none,none,add,eq,neq,le,geq,leu,gequ,add,add,add,add,add,add,add,add,add,le,leu,xori,ori,andi,slli,srli,srai,add,sub,slli,
 le,leu,xori,srli,srai,ori,andi};
 unsigned int getValxx(const unsigned char *s,int l,int r)
@@ -149,8 +149,7 @@ int getRs2(int l)
 int getDest(int l)
 {
     char t1=getType1(l);
-    if(t1=='S') return getRs2(l);
-    else if(t1=='B') return 0;
+    if(t1=='B'||t1=='S') return 0;
     else return getRd(l);
 }
 void getAllCommands()

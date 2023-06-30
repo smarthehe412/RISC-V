@@ -6,7 +6,7 @@ class ReservationStationALU
 public:
     struct ReservationStation
     {
-        int bid,bva;
+        int bid[5],bva[5];
         struct node
         {
             bool busy;
@@ -15,10 +15,14 @@ public:
             node(){busy=false;dest=vj=vk=op=ret=id=0;qj=qk=-1;st=wait;}
             node(int dest,int vj,int vk,int qj,int qk,int op,int id): dest(dest),vj(vj),vk(vk),qj(qj),qk(qk),op(op),id(id) {busy=true;st=wait;ret=0;}
         } rs[N];
-        ReservationStation(){bid=-2,bva=0;}
+        ReservationStation()
+        {
+            for(int i=0;i<5;i++) bid[i]=-2,bva[i]=0;
+        }
         void clear()
         {
             for(int i=0;i<N;i++) rs[i]=node();
+            for(int i=0;i<5;i++) bid[i]=-2,bva[i]=0;
         }
         void ins(int dest,int vj,int vk,int qj,int qk,int op,int id)
         {
@@ -27,8 +31,8 @@ public:
                 if(!rs[i].busy)
                 {
                     rs[i]=node(dest,vj,vk,qj,qk,op,id);
-                    if(rs[i].qj==bid) rs[i].qj=-1,rs[i].vj=bva;
-                    if(rs[i].qk==bid) rs[i].qk=-1,rs[i].vk=bva;
+                    for(int j=0;j<5;j++) if(rs[i].qj==bid[j]) rs[i].qj=-1,rs[i].vj=bva[j];
+                    for(int j=0;j<5;j++) if(rs[i].qk==bid[j]) rs[i].qk=-1,rs[i].vk=bva[j];
                     return;
                 }
             }
@@ -59,10 +63,19 @@ public:
         int getret(int pos){return rs[pos].ret;}
         void nextState(int pos){rs[pos].st++;}
     } now,next;
-    void nextClock(){now=next;next.bid=-2,next.bva=0;}
+    void nextClock()
+    {
+        now=next;
+        for(int i=0;i<5;i++) next.bid[i]=-2,next.bva[i]=0;
+    }
     void broadcast(int id,int va)
     {
-        next.bid=id,next.bva=va;
+        for(int i=0;i<5;i++)
+        {
+            if(next.bid[i]!=-2) continue;
+            next.bid[i]=id,next.bva[i]=va;
+            break;
+        }
         for(int i=0;i<N;i++)
         {
             if(next.rs[i].qj==id) next.rs[i].qj=-1,next.rs[i].vj=va;
@@ -125,8 +138,6 @@ public:
             }
             case srai:res2=(x>>(y&31));break;
             case sub:res2=(x-y);break;
-            case mul:res2=(x*y);break;
-            case dv:res2=(x/y);break;
         }
         prompt2();
     }

@@ -11,7 +11,7 @@ struct information
     information(int dest,int vj,int vk,int qj,int qk,int op): dest(dest),vj(vj),vk(vk),qj(qj),qk(qk),op(op) {oth=0;}
     void print()
     {
-        printf("dest:%d vj:%d vk:%d qj:%d qk:%d op:%d\n",dest,vj,vk,qj,qk,op);
+        fprintf(stderr,"dest:%d vj:%d vk:%d qj:%d qk:%d op:%d\n",dest,vj,vk,qj,qk,op);
     }
 };
 information decode(int pc)
@@ -104,8 +104,8 @@ public:
         int topoth(){return que[h].oth;}
         void pop()
         {
-            if(que[h].dest&&rely[que[h].dest]==h) rely2[que[h].dest]=-1;
-            //printf("%d %d\n",que[h].pc,que[h].val);
+            if(que[h].dest&&rely[que[h].dest]==h&&rely2[que[h].dest]==h) rely2[que[h].dest]=-1;
+            //printf("%d\n",que[h].pc);
             //for(int i=0;i<32;i++) printf("%d ",reg[i]);printf("\n");
             que[h]=node();
             h=(h+1)%N;
@@ -118,6 +118,7 @@ public:
         while((tmp=RS.now.findDone(tmp+1))!=-1)
         {
             int res=RS.now.getret(tmp),pos=RS.now.getid(tmp);
+            //if(res==4952) fprintf(stderr,"pc:%d ",now.que[pos].pc),decode(now.que[pos].pc).print();
             RS.next.del(tmp);
             next.que[pos].val=res;
             next.que[pos].st++;
@@ -306,8 +307,8 @@ void nextClock()
 }
 int main()
 {
-    freopen("task.data","r",stdin);
-    //freopen("RISC-V_Simulator-main/tomasulo.out","w",stdout);
+    //freopen("task.data","r",stdin);
+    //freopen("tomasulo.out","w",stdout);
     memset(rely,-1,sizeof(rely));
     memset(rely2,-1,sizeof(rely2));
     int cnt=0;

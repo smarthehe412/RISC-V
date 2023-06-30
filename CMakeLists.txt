@@ -3,4 +3,4 @@ project(RISC_V)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(code naive.cpp)
+add_executable(code tomasulo.cpp)

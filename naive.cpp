@@ -173,13 +173,12 @@ int reg[32],pc;
 int main()
 {
     freopen("task.data","r",stdin);
-    //freopen("RISC-V_Simulator-main/naive.out","w",stdout);
+    freopen("naive.out","w",stdout);
     getAllCommands();
     while(1)
     {
-        //printf("%d\n",pc);
-        //for(int i=0;i<32;i++) printf("%d ",reg[i]);printf("\n");
-        //for(int i=131000;i<=132000;i++) printf("%d ",mem[i]);printf("\n");
+        printf("%d\n",pc);
+        for(int i=0;i<32;i++) printf("%d ",reg[i]);printf("\n");
         if(getValxx(mem,pc,pc+3)==0x0ff00513)
         {
             printf("%u",(unsigned int)(reg[10])&255u);
