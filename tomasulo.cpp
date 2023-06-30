@@ -78,7 +78,8 @@ public:
                     if(i==N) i=0;
                     que[i]=node(); 
                 }
-            } 
+            }
+            h=t=0;
         }
         bool isExecute(){return que[h].st==execute;}
         bool isReady(){return que[h].st==ready;}
