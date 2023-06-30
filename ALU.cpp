@@ -1,7 +1,7 @@
 #include "parser.cpp"
 class ReservationStationALU
 {
-    const static int N=64,cdbSIZE=2;
+    const static int N=32,cdbSIZE=2;
     enum state {wait,calc,done};
 public:
     struct ReservationStation

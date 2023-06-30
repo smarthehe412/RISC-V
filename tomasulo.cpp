@@ -52,7 +52,7 @@ information decode(int pc)
 }
 class ReorderBuffer
 {
-    const static int N=100;
+    const static int N=32;
     enum state {execute,ready,commit};
 public:
     struct Buffer
