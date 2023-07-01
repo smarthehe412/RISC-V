@@ -309,7 +309,7 @@ char FILENAME[18][50]={"testcases/array_test1.data","testcases/array_test2.data"
 "testcases/naive.data","testcases/pi.data","testcases/qsort.data","testcases/queens.data","testcases/statement_test.data","testcases/superloop.data","testcases/tak.data"};
 int main()
 {
-    //freopen(FILENAME[17],"r",stdin);
+    //freopen(FILENAME[12],"r",stdin);
     //freopen("tomasulo.out","w",stdout);
     CLOCK=0;
     memset(mem,0,sizeof(mem));
