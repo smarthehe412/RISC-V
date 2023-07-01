@@ -44,6 +44,7 @@ public:
         }
     } now,next;
     void nextClock(){now=next;}
+    void clear(){now=next=Buffer();}
     void prepare(int pos,int va)
     {
         next.que[pos].val=va;
@@ -57,6 +58,7 @@ class MemoryReadWriter
 public:
     MemoryReadWriter(){rem=op=pos=dir=val=rem2=op2=pos2=dir2=val2=0;}
     void nextClock(){rem=rem2,op=op2,pos=pos2,dir=dir2,val=val2;}
+    void clear(){rem=op=pos=dir=val=rem2=op2=pos2=dir2=val2=0;}
     bool busy(){return rem>0;}
     void calc()
     {

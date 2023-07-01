@@ -1,7 +1,9 @@
 #include "command.cpp"
 #include "ALU.cpp"
 #include "LSB.cpp"
+#include <algorithm>
 bool end;
+int fail,success,CLOCK;
 int reg[32],rely[32],CLEAR;
 int reg2[32],rely2[32];
 struct information
@@ -120,11 +122,14 @@ public:
         int tmp=LSB.now.getpos();
         while(LSB.now.isDone(tmp))
         {
-            int res=LSB.now.getv(tmp),pos=LSB.now.getid(tmp);
+            int res=LSB.now.getv(tmp),pos=LSB.now.getid(tmp),op=LSB.now.getop(tmp);
             LSB.next.pop();
-            next.que[pos].val=res;
-            next.que[pos].st++;
-            next.que[pos].wait=false;
+            if(op<0)
+            {
+                next.que[pos].val=res;
+                next.que[pos].st++;
+                next.que[pos].wait=false;
+            }
             tmp=LSB.now.nextpos(tmp);
         }
     }
@@ -188,12 +193,13 @@ void commit()
             int is=RoB.now.topoth();
             if(is!=val)
             {
+                fail++;
                 if(val) cQ.modify(pc+getImm(pc));
                 else cQ.modify(pc+4);
-                bP.changeFreq(false,pc);
+                bP.changeFreq(val,pc);
                 branchClear();
             }
-            else bP.changeFreq(true,pc),RoB.next.pop();
+            else success++,bP.changeFreq(val,pc),RoB.next.pop();
             break;
         }
         case LB:
@@ -248,20 +254,20 @@ void commit()
         }
         case SB:
         {
-            if(RoB.now.isReady()) LSB.next.push(val,1,reg[getRs2(pc)]&255,RoB.now.topid()),RoB.next.letWait();
-            else RoB.next.pop();
+            LSB.next.push(val,1,reg[getRs2(pc)]&255,RoB.now.topid());
+            RoB.next.pop();
             break;
         }
         case SH:
         {
-            if(RoB.now.isReady()) LSB.next.push(val,2,reg[getRs2(pc)]&65535,RoB.now.topid()),RoB.next.letWait();
-            else RoB.next.pop();
+            LSB.next.push(val,2,reg[getRs2(pc)]&65535,RoB.now.topid());
+            RoB.next.pop();
             break;
         }
         case SW:
         {
-            if(RoB.now.isReady()) LSB.next.push(val,4,reg[getRs2(pc)],RoB.now.topid()),RoB.next.letWait();
-            else RoB.next.pop();
+            LSB.next.push(val,4,reg[getRs2(pc)],RoB.now.topid());
+            RoB.next.pop();
             break;
         }
         case ADDI:
@@ -287,6 +293,7 @@ void commit()
 }
 void nextClock()
 {
+    CLOCK++;
     CLEAR=0;
     for(int i=0;i<32;i++) reg[i]=reg2[i],rely[i]=rely2[i];
     RoB.nextClock();
@@ -296,24 +303,36 @@ void nextClock()
     mrw.nextClock();
     cQ.nextClock();
 }
+int op[3]={0,1,2};
+char FILENAME[18][50]={"testcases/array_test1.data","testcases/array_test2.data","testcases/basicopt1.data","testcases/bulgarian.data","testcases/expr.data",
+"testcases/gcd.data","testcases/hanoi.data","testcases/lvalue2.data","testcases/magic.data","testcases/manyarguments.data","testcases/multiarray.data",
+"testcases/naive.data","testcases/pi.data","testcases/qsort.data","testcases/queens.data","testcases/statement_test.data","testcases/superloop.data","testcases/tak.data"};
 int main()
 {
-    //freopen("task.data","r",stdin);
+    //freopen(FILENAME[17],"r",stdin);
     //freopen("tomasulo.out","w",stdout);
+    CLOCK=0;
+    memset(mem,0,sizeof(mem));
+    memset(reg,0,sizeof(reg));
+    memset(reg2,0,sizeof(reg2));
     memset(rely,-1,sizeof(rely));
     memset(rely2,-1,sizeof(rely2));
-    int cnt=0;
     getAllCommands();
     while(1)
     {
-        fetch();
-        execute();
-        commit();
+        std::random_shuffle(op,op+3);
+        for(int i=0;i<3;i++)
+        {
+            if(op[i]==0) fetch();
+            if(op[i]==1) execute();
+            if(op[i]==2) commit();
+        }
         nextClock();
         if(end)
         {
-            printf("%u",((unsigned int)reg[10])&255u);
-            return 0;
+            printf("%u\n",((unsigned int)reg[10])&255u);
+            //printf("%d %d %d %f\n",CLOCK,success,fail,success/1.0/(fail+success));
+            break;
         }
         //printf("%u\n",reg[10]);
     }
